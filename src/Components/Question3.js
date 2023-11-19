@@ -4,24 +4,32 @@ import EnteredDetails from './EnteredDetails';
 
 function Questions3() {
   //const navigate = useNavigate(); 
+  const [answer, setAnswer] = useState('Y');
+
+  const [reason, setReason] = useState('');
+
 
   // Function to handle form submission 
   const submit = (e) => {
     setLabelstate(false)
     setCount(pre => pre + 1)
-    console.log(e)
-    setAnswers(pre => [...pre, { quesId: quesDetails.quesId, answer }])
+
+    setAnswers(pre => {
+      console.log(reason, pre, answer, quesDetails.quesId, "DATA");
+      return [...pre, ...[{ quesId: quesDetails.quesId, answer, reason }]
+      ]
+    })
+    console.log(answer)
+    setReason("")
     fetchQuestions(answer)
   }
 
-  const [answer, setAnswer] = useState('Y');
 
   const handleChange = (event) => {
     setAnswer(event.target.value)
 
   }
 
-  const [reason, setReason] = useState('');
   const handleInput = (e) => {
     setReason(e.target.value);
   }
@@ -43,7 +51,7 @@ function Questions3() {
   // const [queslabel, setQueslabel] = useState([]);
   const [isFinish, setFinish] = useState(false);
   const [labelstate, setLabelstate] = useState(false);
-  
+
   useEffect(() => {
     fetchQuestions();
   }, []);
@@ -69,10 +77,10 @@ function Questions3() {
 
       )
       .catch(error => console.error('Error while fetching ques details', error));
-    // console.log(answers);
+    console.log(answers);
   }
 
-  return isFinish ?
+  return isFinish ? 
     (
       <>
         {
@@ -108,28 +116,21 @@ function Questions3() {
               autoComplete="off"
               className="m-2"
               value={id}
-              onChange = {e => setLabelstate( id === "N" ? true: false)}
+              onChange={e => setLabelstate(id === "N" ? true : false)}
             />
             <label htmlFor={id}>{id === "Y" ? "YES" : "NO"} </label>
             <p>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
-           { ((quesDetails.quesId >1 && id === "N" && labelstate) && <textarea>
-              Please enter reason - it should be a good reason
-            </textarea> 
-          ) }
-
+            {(( quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea
+              placeholder="Please enter reason - it should be a good reason" onChange={e => {
+                console.log(e.target.value, "textarea")
+                setReason(e.target.value)
+              }}>
+            </textarea>
+            )}
             <br />
           </>
         ))}
       </div>
-      {
-        answer === 'no' && (<input
-          value={reason}
-          className="form-control m-2"
-          onChange={e => setReason(e.target.value)}
-        />
-        )
-      }
-
 
       <button onClick={submit} className="btn btn-success mx-3">
         Next
