@@ -32,8 +32,8 @@ const options=[{id:'yes'},{id:'no'}]
 
 
   return (
-    <form onSubmit={submit}>
-      <div className="form-group m-2" onChange={e=>setAnswer(e.target.value)}>
+    <form className='form-group' onSubmit={submit}>
+      <div className="m-6" onChange={e=>setAnswer(e.target.value)}>
         <label htmlFor="q1">
           <b>1.</b> Can the dataset be shared?
         </label>

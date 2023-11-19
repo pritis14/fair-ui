@@ -27,7 +27,7 @@ const submit = (e) => {
 } 
 
 return ( 
-	<div className="container-fluid qform"> 
+	<div className="container-fluid "> 
 	<div className="col-md-5 m-auto"> 
 		<div className="mt-3"> 
 		<div className="card text-left h-100"> 

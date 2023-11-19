@@ -115,7 +115,7 @@ return (
 <Route 
 path='/question1'element={<Questions  addQuestion1Data={addQuestion1Data}/>} /> 
 <Route path='/question2'element={<Questions2 />} /> 
-<Route path='/question3'element={<Questions3 />} /> 
+<Route path='/question3'element={<Questions3  data={basicData}/>} /> 
 
 		{/* Render the About component */} 
 		<Route 

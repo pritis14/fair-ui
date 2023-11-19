@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EnteredDetails from './EnteredDetails';
 
-function Questions3() {
+function Questions3(props) {
   //const navigate = useNavigate(); 
   const [answer, setAnswer] = useState('Y');
 
@@ -10,45 +10,32 @@ function Questions3() {
 
 
   // Function to handle form submission 
-  const submit = (e) => {
+  const submit = async (e) => {
     setLabelstate(false)
     setCount(pre => pre + 1)
 
     setAnswers(pre => {
-      console.log(reason, pre, answer, quesDetails.quesId, "DATA");
-      return [...pre, ...[{ quesId: quesDetails.quesId, answer, reason }]
+      return [...pre, ...[{ quesId: quesDetails.quesId, answer: answer, reason }]
       ]
     })
-    console.log(answer)
-    setReason("")
+   
     fetchQuestions(answer)
+    if (isFinish) {
+      await saveReport(answers)
+    }
+    setReason("")
   }
 
-
-  const handleChange = (event) => {
-    setAnswer(event.target.value)
-
-  }
-
-  const handleInput = (e) => {
-    setReason(e.target.value);
-  }
-
-  const resetRadioState = () => {
-    setAnswer('');
-  }
   const [count, setCount] = useState(1);
 
 
   const options = [{ id: 'Y' }, { id: 'N' }]
-  //const quesType=[{yes1:''},]
   const [answers, setAnswers] = useState([]);
 
 
 
   const [quesDetails, setQuesDetails] = useState([]);
   const [quesNo, setQuesNo] = useState(0);
-  // const [queslabel, setQueslabel] = useState([]);
   const [isFinish, setFinish] = useState(false);
   const [labelstate, setLabelstate] = useState(false);
 
@@ -64,6 +51,7 @@ function Questions3() {
         }
         else {
           setFinish(true)
+          saveReport(answers)
         }
       })
       .then(data => {
@@ -80,18 +68,53 @@ function Questions3() {
     console.log(answers);
   }
 
-  return isFinish ? 
+  const saveReport = async (data) => {
+    //e.preventDefault();
+    console.log(data, answers);
+
+
+    const response = await fetch('http://localhost:8080/saveReport/all', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: props.data.name,
+        report: JSON.stringify(data),
+        emailId: props.data.email,
+        surveyId: 1
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const result = await response.json();
+    console.log(result);
+
+
+  }
+
+
+
+  return isFinish ?
     (
+
       <>
         {
           answers.map((dt) => {
             return (<div>
               <ul>
                 <li>
+                  name:{props.data.name}
+                </li>
+                <li>
+                  emailId:{props.data.emailId}
+                </li>
+                <li>
                   question: {dt.quesId}
                 </li>
                 <li>
                   answer: {dt.answer}
+                </li>
+                <li>
+                  reason:{dt.reason}
                 </li>
               </ul>
             </div>)
@@ -102,7 +125,7 @@ function Questions3() {
 
     : (<>
 
-      <div className="form-group m-2" onChange={e => setAnswer(e.target.value)}>
+      <div className="form-group m-2" >
         <label htmlFor="q1">
           <p><b>{count}</b>{quesDetails.quesDescription}</p>
         </label>
@@ -116,13 +139,12 @@ function Questions3() {
               autoComplete="off"
               className="m-2"
               value={id}
-              onChange={e => setLabelstate(id === "N" ? true : false)}
+              onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id) }}
             />
             <label htmlFor={id}>{id === "Y" ? "YES" : "NO"} </label>
             <p>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
-            {(( quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea
+            {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
-                console.log(e.target.value, "textarea")
                 setReason(e.target.value)
               }}>
             </textarea>

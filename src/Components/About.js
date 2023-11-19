@@ -15,8 +15,8 @@ const submit = (e) => {
 	navigate('/addBasicData'); 
 	}  
 return ( 
-    <form onSubmit={submit}> 
-	<div className='text-center qform'> 
+    <form className='aboutForm' onSubmit={submit}> 
+	<div className='text-center card'> 
 		<h3>Welcome to the Fair Survey</h3> 
 		<p>Lets make your data more fair.</p> 
 
