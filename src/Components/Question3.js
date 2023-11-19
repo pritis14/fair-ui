@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import EnteredDetails from './EnteredDetails';
 
 function Questions3() {
   //const navigate = useNavigate(); 
@@ -37,7 +38,7 @@ function Questions3() {
 
   const [quesDetails, setQuesDetails] = useState([]);
   const [quesNo, setQuesNo] = useState(0);
-  const [isFinish,setFinish]=useState(false);
+  const [isFinish, setFinish] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
@@ -46,18 +47,18 @@ function Questions3() {
   const fetchQuestions = (quesType = "") => {
     fetch(`http://localhost:8080/bySurveyAndQuestionType/1/${quesNo}${quesType}`)
       .then(response => {
-        if(response.status===200){
+        if (response.status === 200) {
           return response.json()
         }
-        else{
-        setFinish(true)
+        else {
+          setFinish(true)
         }
       })
       .then(data => {
         if (data) {
           setQuesDetails(data)
           setQuesNo(data.quesId)
-        } else{
+        } else {
           setFinish(true)
         }
       }
@@ -67,13 +68,30 @@ function Questions3() {
     console.log(answers);
   }
 
-  return isFinish?<div>SurveyFinish</div>:(<>
+  return isFinish ?
+ (
+  <>
+  {
+    answers.map((dt)=> {
+      return (<div>
+				<ul>
+				<li>
+					question: {dt.quesId}
+				</li>
+				<li>
+					answer: {dt.answer}
+				</li>
+				</ul>
+			</div>) 
+    })
+  }
+  </>
+ )
+ 
+ : (<>
 
     <div className="form-group m-2" onChange={e => setAnswer(e.target.value)}>
       <label htmlFor="q1">
-        {/* {quesDetails.map(ques=>(
-
-          <b>{count}</b>{ques.quesDetails})} */}
         <p><b>{count}</b>{quesDetails.quesDescription}</p>
       </label>
       <br />
@@ -87,7 +105,13 @@ function Questions3() {
             className="m-2"
             value={id}
           />
-          <label htmlFor={id}> {id}</label>
+          <label htmlFor={id}>{id}</label>
+
+          {/* <label htmlFor={id}> if(id='Y') {"yes"}
+          else {"no"} </label> */}
+          {/* { id==='Y' <label>yes </label>}
+          {id ==='N' <label>no </label>} */}
+
           <br />
         </>
       ))}
