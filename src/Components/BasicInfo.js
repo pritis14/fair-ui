@@ -20,9 +20,9 @@ const submit = (e) => {
 	alert("All fields necessary!"); 
 	} else { 
 	// Call the addBasicData function provided by the parent component 
-	addBasicData(name, email, contact); 
+	// addBasicData(name, email, contact); 
 	// Navigate to the '/questions' route 
-	navigate('/questions'); 
+	navigate('/question3'); 
 	} 
 } 
 
@@ -66,11 +66,10 @@ return (
 					autoComplete='off'
 				/> 
 				</div> 
-				<div className="form-group my-3"> 
+				{/* <div className="form-group my-3"> 
 				<label htmlFor=""> 
 					<b>3.</b> Contact No. 
 				</label> 
-				{/* Input field for contact number */} 
 				<input 
 					type="tel"
 					name='contact'
@@ -80,7 +79,7 @@ return (
 					placeholder='Enter your Contact No.'
 					autoComplete='off'
 				/> 
-				</div> 
+				</div>  */}
 				{/* Submit button */} 
 				<button type='submit' className='btn btn-success mx-3'>Next</button> 
 			</form> 
