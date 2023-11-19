@@ -119,7 +119,7 @@ return (
 					id="otherProfession"
 					autoComplete="off"
 					className="form-control m-2"
-					value={otherProfession} 
+					value="otherProfession" 
 					onChange={(e) => { setOtherProfession(e.target.value) }} 
 				/> 
 				<hr /> 

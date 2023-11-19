@@ -2,28 +2,40 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; 
+import  { useEffect, useState } from 'react'; 
 
-function Questions() {
+function Questions({addQuestion1Data}) {
   const navigate = useNavigate(); 
+  const [answer1, setAnswer1] = React.useState('yes');
 
 // Function to handle form submission 
 const submit = (e) => { 
-	navigate('/addBasicData'); 
+  if (!answer1) { 
+    alert("Please select answer"); 
+    } 
+    addQuestion1Data(answer1); 
+    if(answer1=='yes')
+    navigate('/details')
+    else
+    navigate('/about')
 	} 
-  const [answer, setAnswer, desc, no] = React.useState('yes');
+  
+
+
 
   const handleChange = (event) => {
-    setAnswer(event.target.value)
+    setAnswer1(event.target.value)
+    sessionStorage.setItem('question1',event.target.value)
   }
 
   const resetRadioState = () => {
-    setAnswer('');
+    setAnswer1('');
   }
   return (
-    <form>
+    <form onSubmit={submit}>
       <div className="form-group m-2" onChange={handleChange}>
         <label htmlFor="q1">
-          <b>1.</b> Can the dataset be shared?
+          <b>1.</b> Can the dataset be shared?(if public choose yes/private choose no )
         </label>
         <br />
 
@@ -49,15 +61,8 @@ const submit = (e) => {
           className="m-2"
           value="no"
         />
-        <label htmlFor="no"> No:</label>
-        <input
-          type="text"
-          id="descForno"
-          autoComplete="off"
-          className="form-control m-2"
-          value={no}
-          onChange={(e) => { setAnswer(e.target.value) }}
-        />
+         <label htmlFor="no"> no</label>
+        <br />
 
         <button type="submit" className="btn btn-success mx-3"> 
 				Next 
@@ -67,8 +72,5 @@ const submit = (e) => {
     </form>
   )
 }
-
-
-
 
 export default Questions;
