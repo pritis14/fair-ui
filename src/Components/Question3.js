@@ -18,7 +18,7 @@ function Questions3(props) {
       return [...pre, ...[{ quesId: quesDetails.quesId, answer: answer, reason }]
       ]
     })
-   
+
     fetchQuestions(answer)
     if (isFinish) {
       await saveReport(answers)
@@ -96,17 +96,21 @@ function Questions3(props) {
   return isFinish ?
     (
 
-      <>
+      <div className='BasicForm' style={{ textAlign: "start" ,marginTop:"10em"}}>
+        <p>
+          <h4>SURVEY REPORT</h4>
+
+          name:{props.data.name}
+
+          <br />
+          emailId:{props.data.emailId}
+        </p>
+
+
         {
           answers.map((dt) => {
             return (<div>
               <ul>
-                <li>
-                  name:{props.data.name}
-                </li>
-                <li>
-                  emailId:{props.data.emailId}
-                </li>
                 <li>
                   question: {dt.quesId}
                 </li>
@@ -120,13 +124,13 @@ function Questions3(props) {
             </div>)
           })
         }
-      </>
+      </div>
     )
 
     : (<>
 
       <div className='Question3Form' >
-        <label htmlFor="q1" style={{textAlign:"start"}}>
+        <label htmlFor="q1" style={{ textAlign: "start" }}>
           <p><b>{count}</b>{quesDetails.quesDescription}</p>
         </label>
         <br />
@@ -151,12 +155,12 @@ function Questions3(props) {
             <br />
           </div>
         ))}
-         <button onClick={submit} className="btn btn-success mx-3">
-        Next
-      </button>
+        <button onClick={submit} className="btn btn-success mx-3">
+          Next
+        </button>
       </div>
 
-     
+
     </>
     )
 }

@@ -3,11 +3,15 @@
 body {
   height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  list-style-type: none;
   background-image: linear-gradient(
     to right,
     rgb(253, 146, 107),
     rgb(113, 113, 251)
   );
+  overflow-y:scroll;
+  overflow-x:scroll;
 }
 .aboutForm, .BasicForm, .Question3Form{
   position: absolute;
