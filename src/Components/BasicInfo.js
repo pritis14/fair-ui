@@ -20,7 +20,7 @@ const submit = (e) => {
 	alert("All fields necessary!"); 
 	} else { 
 	// Call the addBasicData function provided by the parent component 
-	// addBasicData(name, email, contact); 
+	addBasicData(name, email); 
 	// Navigate to the '/questions' route 
 	navigate('/question3'); 
 	} 

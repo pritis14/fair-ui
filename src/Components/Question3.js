@@ -7,6 +7,7 @@ function Questions3(props) {
   const [answer, setAnswer] = useState('Y');
 
   const [reason, setReason] = useState('');
+  const navigate = useNavigate(); 
 
 
   // Function to handle form submission 
@@ -15,7 +16,7 @@ function Questions3(props) {
     setCount(pre => pre + 1)
 
     setAnswers(pre => {
-      return [...pre, ...[{ quesId: quesDetails.quesId, answer: answer, reason }]
+      return [...pre, ...[{ quesId: quesDetails.quesId, answer: answer, reason ,details:quesDetails.quesDescription}]
       ]
     })
 
@@ -24,6 +25,9 @@ function Questions3(props) {
       await saveReport(answers)
     }
     setReason("")
+    if(isFinish){
+      navigate('/thanks'); 
+    }
   }
 
   const [count, setCount] = useState(1);
@@ -100,10 +104,10 @@ function Questions3(props) {
         <p>
           <h4>SURVEY REPORT</h4>
 
-          name:{props.data.name}
+          Name:     {props.data.name}
 
           <br />
-          emailId:{props.data.emailId}
+          EmailId: {props.data.email}
         </p>
 
 
@@ -112,7 +116,7 @@ function Questions3(props) {
             return (<div>
               <ul>
                 <li>
-                  question: {dt.quesId}
+                 {dt.quesId} question: {dt.details}
                 </li>
                 <li>
                   answer: {dt.answer}
@@ -124,13 +128,16 @@ function Questions3(props) {
             </div>)
           })
         }
+        <button onClick={submit} className="btn btn-success mx-3">
+          Survey Finished!!
+        </button>
       </div>
     )
 
     : (<>
 
       <div className='Question3Form' >
-        <label htmlFor="q1" style={{ textAlign: "start" }}>
+        <label htmlFor="q1" style={{ textAlign: "start" ,marginTop:"10em"}}>
           <p><b>{count}</b>{quesDetails.quesDescription}</p>
         </label>
         <br />
@@ -144,8 +151,8 @@ function Questions3(props) {
               value={id}
               onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id) }}
             />
-            <label htmlFor={id}>{id === "Y" ? "YES" : "NO"} </label>
-            <p>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
+            <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label><br/>
+            <p>{id === "Y"  ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
             {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
                 setReason(e.target.value)
