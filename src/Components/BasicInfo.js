@@ -27,20 +27,17 @@ const submit = (e) => {
 } 
 
 return ( 
-	<div className="container-fluid "> 
-	<div className="col-md-5 m-auto"> 
-		<div className="mt-3"> 
-		<div className="card text-left h-100"> 
-			<div className="card-body my-3"> 
-			<form onSubmit={submit}> 
+
+			<form className='BasicForm' onSubmit={submit}> 
 				<label htmlFor=""> 
-				<h4>Basic Details</h4> 
+				<h3>Basic Details</h3> 
 				</label> 
 				<div className="form-group my-3"> 
-				<label htmlFor=""> 
-					<b>1.</b> Name 
+				<label className="label_basicinfo" htmlFor=""> 
+				 Name 
 				</label> 
 				{/* Input field for name */} 
+				<br></br>
 				<input 
 					type="text"
 					name="name"
@@ -52,10 +49,11 @@ return (
 				/> 
 				</div> 
 				<div className="form-group my-3"> 
-				<label htmlFor=""> 
-					<b>2.</b> Email 
+				<label className="label_basicinfo"  htmlFor=""> 
+				 Email 
 				</label> 
 				{/* Input field for email */} 
+				<br></br>
 				<input 
 					type="email"
 					name='email'
@@ -83,16 +81,11 @@ return (
 				{/* Submit button */} 
 				<button type='submit' className='btn btn-success mx-3'>Next</button> 
 			</form> 
-			{/* Step indicators */} 
-			<center> 
-				<span className="badge badge-pill bg-success"><b>1</b></span> 
-				<span className="badge rounded-pill disabled">2</span> 
-				<span className="badge rounded-pill disabled">3</span> 
-			</center> 
-			</div> 
-		</div> 
-		</div> 
-	</div> 
-	</div> 
-) 
+			/* Step indicators */ 
+			// <center> 
+			// 	<span className="badge badge-pill bg-success"><b>1</b></span> 
+			// 	<span className="badge rounded-pill disabled">2</span> 
+			// 	<span className="badge rounded-pill disabled">3</span> 
+			// </center> 
+)
 } 

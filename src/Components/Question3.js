@@ -125,19 +125,18 @@ function Questions3(props) {
 
     : (<>
 
-      <div className="form-group m-2" >
-        <label htmlFor="q1">
+      <div className='Question3Form' >
+        <label htmlFor="q1" style={{textAlign:"start"}}>
           <p><b>{count}</b>{quesDetails.quesDescription}</p>
         </label>
         <br />
         {options.map(({ id }) => (
-          <>
+          < div className='radioButton'>
             <input
               type="radio"
               name="ProfessionRadio"
               id={id}
               autoComplete="off"
-              className="m-2"
               value={id}
               onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id) }}
             />
@@ -150,13 +149,14 @@ function Questions3(props) {
             </textarea>
             )}
             <br />
-          </>
+          </div>
         ))}
-      </div>
-
-      <button onClick={submit} className="btn btn-success mx-3">
+         <button onClick={submit} className="btn btn-success mx-3">
         Next
       </button>
+      </div>
+
+     
     </>
     )
 }

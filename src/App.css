@@ -1,20 +1,79 @@
 /* App.css */
 
 body {
-  background-color: #fff;
+  height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
-  background-image: linear-gradient(to right, rgb(253, 146, 107),rgb(113, 113, 251));
+  background-image: linear-gradient(
+    to right,
+    rgb(253, 146, 107),
+    rgb(113, 113, 251)
+  );
 }
-
-.aboutForm {
-  margin: 12em 12em;
-  padding: 2em 1em;
+.aboutForm, .BasicForm, .Question3Form{
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 50%;
+  height: auto;
   border: 1px solid rgb(153, 151, 151);
   border-radius: 10px;
-  padding: 5em;
-  margin-top: 10vh;
-  margin-bottom: 5vh;
-  z-index: 0;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 3em;
+  text-align: center;
+}
+.aboutForm h3 {
+  font-size: 1.8em;
+}
+button {
+  color: #fff;
+  background-color: green;
+  font-size: 0.9em;
+  font-weight: 600;
+  border: none;
+  padding: 0.8em;
+  border-radius: 5px;
+  margin-top: 1em;
+  letter-spacing: 1px;
+}
+.BasicForm, .Question3Form{
+width: 35%;
+}
+.BasicForm input{
+  width: 100%;
+  border-radius: 5px;
+  padding: 0.6em;
+  border: 1px solid lightgray;
+  margin:  10px 0;
+  border-color: none;
+}
+input:focus-visible{
+  outline-color: rgb(251, 168, 182);
+}
+.BasicForm h2{
+  font-family:Heavy;
+
+  padding: 20px 0;
+  color: #1e1f36;
+  background-image: linear-gradient(
+    -125deg,
+    #231557 0%,
+    #44107a 29%,
+    #ff1361 67%,
+    #ffa200 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 4s linear infinite;
+} 
+.label_basicinfo{
+  float: left;
+  /* margin-bottom: 10px; */
+}
+.radioButton{
+  display: flex;
+  align-items: baseline;
 }
 .navbar {
   width: 59vw;
@@ -29,20 +88,9 @@ body {
   margin-bottom: 5vh;
   z-index: 0;
 }
-.qform{
-  background-image: linear-gradient(to right, rgb(254, 187, 165),rgb(167, 167, 255)) !important;
-}
-.form-group{
-  width: 40em;
-  height: auto;
-  background-color: #fff;
-  text-align: center;
-}
-
 
 .badge {
   color: black;
-
 }
 
 .footer {
