@@ -1,13 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import EnteredDetails from './EnteredDetails';
+import jsPDF from 'jspdf';
 
 function Questions3(props) {
   //const navigate = useNavigate(); 
   const [answer, setAnswer] = useState('Y');
 
   const [reason, setReason] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
+  // For Pdf
+  const styles = {
+    page: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      height: 'auto',
+      width: 'auto',
+      'page-break-after': 'always',
+    },
+
+    columnLayout: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      margin: '3rem 0 5rem 0',
+      gap: '2rem',
+    },
+
+    column: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+
+    spacer2: {
+      height: '2rem',
+    },
+
+    fullWidth: {
+      width: '100%',
+    },
+
+    marginb0: {
+      marginBottom: 0,
+    },
+  };
+
+  const reportTemplateRef = useRef(null);
+
+  const handleGeneratePdf = () => {
+    const doc = new jsPDF({
+      format: 'a4',
+      unit: 'px',
+    });
+
+    // Adding the fonts.
+    doc.setFont('Inter-Regular', 'normal');
+
+    doc.html(reportTemplateRef.current, {
+      async callback(doc) {
+        await doc.save('document');
+      },
+    });
+  };
+
 
 
   // Function to handle form submission 
@@ -16,19 +70,19 @@ function Questions3(props) {
     setCount(pre => pre + 1)
 
     setAnswers(pre => {
-      return [...pre, ...[{ quesId: quesDetails.quesId, answer: answer, reason ,details:quesDetails.quesDescription}]
+      return [...pre, ...[{ quesId: quesDetails.quesId, answer: answer, reason, details: quesDetails.quesDescription }]
       ]
     })
 
     fetchQuestions(answer)
     if (isFinish) {
-      navigate('/thanks'); 
+      navigate('/thanks');
       await saveReport(answers)
 
     }
     setReason("")
-    if(isFinish){
-      
+    if (isFinish) {
+
     }
   }
 
@@ -102,44 +156,52 @@ function Questions3(props) {
   return isFinish ?
     (
 
-      <div className='BasicForm' style={{ textAlign: "start" ,marginTop:"10em"}}>
-        <p>
-          <h4>SURVEY REPORT</h4>
+      <div className='BasicForm' style={styles.page}>
+        <div  ref={reportTemplateRef}>
+          <p>
+            <h4>SURVEY REPORT</h4>
 
-          Name:     {props.data.name}
+            Name:     {props.data.name}
 
-          <br />
-          EmailId: {props.data.email}
-        </p>
+            <br />
+            EmailId: {props.data.email}
+          </p>
 
 
-        {
-          answers.map((dt) => {
-            return (<div>
-              <ul>
-                <li>
-                 {dt.quesId} question: {dt.details}
-                </li>
-                <li>
-                  answer: {dt.answer}
-                </li>
-                <li>
-                  reason:{dt.reason}
-                </li>
-              </ul>
-            </div>)
-          })
-        }
-        <button onClick={submit} className="btn btn-success mx-3">
+          {
+            answers.map((dt) => {
+              return (<div>
+                <ul>
+                  <li>
+                    {dt.quesId} question: {dt.details}
+                  </li>
+                  <li>
+                    answer: {dt.answer}
+                  </li>
+                  <li>
+                    reason:{dt.reason}
+                  </li>
+                </ul>
+              </div>)
+            })
+          }
+          {/* <button onClick={submit} className="btn btn-success mx-3">
           Survey Finished!!
-        </button>
+        </button> */}
+
+        </div>
+        <div >
+          <button className="button" onClick={handleGeneratePdf}>
+            Generate PDF
+          </button>
+        </div>
       </div>
     )
 
     : (<>
 
       <div className='Question3Form' >
-        <label htmlFor="q1" style={{ textAlign: "start" ,marginTop:"10em"}}>
+        <label htmlFor="q1" style={{ textAlign: "start", marginTop: "10em" }}>
           <p><b>{count}</b>{quesDetails.quesDescription}</p>
         </label>
         <br />
@@ -153,8 +215,8 @@ function Questions3(props) {
               value={id}
               onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id) }}
             />
-            <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label><br/>
-            <p>{id === "Y"  ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
+            <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label><br />
+            <p>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
             {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
                 setReason(e.target.value)
