@@ -46,7 +46,7 @@ function Questions3(props) {
 
   const reportTemplateRef = useRef(null);
 
-  const handleGeneratePdf = () => {
+  const handleGeneratePdf= async (e) => {
     const doc = new jsPDF({
       format: 'a4',
       unit: 'px',
@@ -60,6 +60,12 @@ function Questions3(props) {
         await doc.save('document');
       },
     });
+
+    if (isFinish) {
+      navigate('/thanks');
+      await saveReport(answers);
+    }
+
   };
 
 
@@ -67,6 +73,7 @@ function Questions3(props) {
   // Function to handle form submission 
   const submit = async (e) => {
     setLabelstate(false)
+    setYeslabel(false)
     setCount(pre => pre + 1)
 
     setAnswers(pre => {
@@ -74,12 +81,15 @@ function Questions3(props) {
       ]
     })
 
-    fetchQuestions(answer)
-    if (isFinish) {
-      navigate('/thanks');
-      await saveReport(answers)
+    if(answer==='Y')
+    setFairesult(value=>value+1)
 
-    }
+    fetchQuestions(answer)
+    // if (isFinish) {
+    //   navigate('/thanks');
+    //   await saveReport(answers)
+
+    // }
     setReason("")
     if (isFinish) {
 
@@ -87,6 +97,7 @@ function Questions3(props) {
   }
 
   const [count, setCount] = useState(1);
+  const[fairresult,setFairesult]=useState(0);
 
 
   const options = [{ id: 'Y' }, { id: 'N' }]
@@ -98,6 +109,7 @@ function Questions3(props) {
   const [quesNo, setQuesNo] = useState(0);
   const [isFinish, setFinish] = useState(false);
   const [labelstate, setLabelstate] = useState(false);
+  const [yeslabel, setYeslabel] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
@@ -185,6 +197,9 @@ function Questions3(props) {
               </div>)
             })
           }
+          <br/>
+          <p>{fairresult>6 ? 'Survey is : Fair' : fairresult<3? 'Survey is : Not Fair':'Survey is : Partial'}</p>
+          
           {/* <button onClick={submit} className="btn btn-success mx-3">
           Survey Finished!!
         </button> */}
@@ -213,10 +228,19 @@ function Questions3(props) {
               id={id}
               autoComplete="off"
               value={id}
-              onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id) }}
+              onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id); setYeslabel(id==="Y"?true:false) }}
             />
             <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label><br />
+
             <p>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
+
+            {(( quesDetails.quesId> 7 && id==="Y" && yeslabel) && <textarea
+              placeholder="Please enter reason - it should be a good reason" onChange={e => {
+                setReason(e.target.value)
+              }}>
+            </textarea>
+            )}
+
             {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
                 setReason(e.target.value)
