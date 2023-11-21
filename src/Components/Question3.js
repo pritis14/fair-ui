@@ -22,11 +22,13 @@ function Questions3(props) {
 
     fetchQuestions(answer)
     if (isFinish) {
+      navigate('/thanks'); 
       await saveReport(answers)
+
     }
     setReason("")
     if(isFinish){
-      navigate('/thanks'); 
+      
     }
   }
 
@@ -55,7 +57,7 @@ function Questions3(props) {
         }
         else {
           setFinish(true)
-          saveReport(answers)
+          //saveReport(answers)
         }
       })
       .then(data => {

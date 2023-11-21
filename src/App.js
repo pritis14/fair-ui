@@ -12,6 +12,7 @@ import Questions from './Components/Questions';
 import Questions2 from './Components/Question2';
 import Questions3 from './Components/Question3';
 import { About } from './Components/About'; 
+import TestPdf from './Components/TestPdf';
 
 function App() { 
 // Initialize basicData state from localStorage or an empty object 
@@ -112,6 +113,11 @@ return (
 		path='/thanks'
 		element={<ThankYouPage />} 
 		/> 
+		
+		<Route 
+		path='/TestPdf'
+		element={<TestPdf />} 
+		/>
 <Route 
 path='/question1'element={<Questions  addQuestion1Data={addQuestion1Data}/>} /> 
 <Route path='/question2'element={<Questions2 />} /> 
