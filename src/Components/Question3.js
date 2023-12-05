@@ -234,14 +234,14 @@ function Questions3(props) {
             <p style={{width: "80em"}}><br/>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
            
             
-            {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  
+            {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  style={{width:"80em" ,height:"5em"}}
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
                 setReason(e.target.value)
               }}>
             </textarea>
             )}
 
-            {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea
+            {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea style={{width:"80em" ,height:"5em"}}
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
                 setReason(e.target.value)
               }}>
