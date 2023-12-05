@@ -12,10 +12,9 @@ function Questions3(props) {
   // For Pdf
   const styles = {
     page: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      height: 'auto',
-      width: 'auto',
+      margin :'0.5em',
+      height: '100',
+      width: '100',
       'page-break-after': 'always',
     },
 
@@ -73,7 +72,7 @@ function Questions3(props) {
   // Function to handle form submission 
   const submit = async (e) => {
     setLabelstate(false)
-    setYeslabel(false)
+    setYeslabel(true)
     setCount(pre => pre + 1)
 
     setAnswers(pre => {
@@ -217,7 +216,7 @@ function Questions3(props) {
 
       <div className='Question3Form' >
         <label htmlFor="q1" style={{ textAlign: "start", marginTop: "10em" }}>
-          <p><b>{count}</b>{quesDetails.quesDescription}</p>
+          <p>{count}. {quesDetails.quesDescription}</p>
         </label>
         <br />
         {options.map(({ id }) => (
@@ -230,11 +229,12 @@ function Questions3(props) {
               value={id}
               onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id); setYeslabel(id==="Y"?true:false) }}
             />
-            <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label><br />
+            <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label>
 
-            <p>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
-
-            {(( quesDetails.quesId> 7 && id==="Y" && yeslabel) && <textarea
+            <p style={{width: "80em"}}><br/>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
+           
+            
+            {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
                 setReason(e.target.value)
               }}>
@@ -247,7 +247,8 @@ function Questions3(props) {
               }}>
             </textarea>
             )}
-            <br />
+            
+            
           </div>
         ))}
         <button onClick={submit} className="btn btn-success mx-3">
