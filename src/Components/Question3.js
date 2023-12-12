@@ -12,7 +12,7 @@ function Questions3(props) {
   // For Pdf
   const styles = {
     page: {
-      margin :'0.5em',
+      margin: '0.5em',
       height: '100',
       width: '100',
       'page-break-after': 'always',
@@ -45,7 +45,31 @@ function Questions3(props) {
 
   const reportTemplateRef = useRef(null);
 
-  const handleGeneratePdf= async (e) => {
+
+  
+const onFileChangeHandler =  async (e) => {
+  e.preventDefault();
+  this.setState({
+      selectedFile: e.target.files[0]
+  });
+  const formData = new FormData();
+  formData.append('file', this.state.selectedFile);
+  
+	localStorage.setItem("data",JSON.stringify(formData));
+
+  // fetch('http://localhost:8080/upload', {
+  //     method: 'post',
+  //     body: formData
+  // }).then(res => {
+  //     if(res.ok) {
+  //         console.log(res.data);
+  //         alert("File uploaded successfully.")
+  //     }
+  // });
+};
+
+
+  const handleGeneratePdf = async (e) => {
     const doc = new jsPDF({
       format: 'a4',
       unit: 'px',
@@ -80,8 +104,8 @@ function Questions3(props) {
       ]
     })
 
-    if(answer==='Y')
-    setFairesult(value=>value+1)
+    if (answer === 'Y')
+      setFairesult(value => value + 1)
 
     fetchQuestions(answer)
     // if (isFinish) {
@@ -96,7 +120,7 @@ function Questions3(props) {
   }
 
   const [count, setCount] = useState(1);
-  const[fairresult,setFairesult]=useState(0);
+  const [fairresult, setFairesult] = useState(0);
 
 
   const options = [{ id: 'Y' }, { id: 'N' }]
@@ -168,7 +192,7 @@ function Questions3(props) {
     (
 
       <div className='BasicForm' style={styles.page}>
-        <div  ref={reportTemplateRef}>
+        <div ref={reportTemplateRef}>
           <p>
             <h4>SURVEY REPORT</h4>
 
@@ -196,9 +220,9 @@ function Questions3(props) {
               </div>)
             })
           }
-          <br/>
-          <p>{fairresult>6 ? 'Survey is : Fair' : fairresult<3? 'Survey is : Not Fair':'Survey is : Partial'}</p>
-          
+          <br />
+          <p>{fairresult > 6 ? 'Survey is : Fair' : fairresult < 3 ? 'Survey is : Not Fair' : 'Survey is : Partial'}</p>
+
           {/* <button onClick={submit} className="btn btn-success mx-3">
           Survey Finished!!
         </button> */}
@@ -227,28 +251,44 @@ function Questions3(props) {
               id={id}
               autoComplete="off"
               value={id}
-              onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id); setYeslabel(id==="Y"?true:false) }}
+              onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id); setYeslabel(id === "Y" ? true : false) }}
             />
             <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label>
 
-            <p style={{width: "80em"}}><br/>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
-           
-            
-            {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  style={{width:"80em" ,height:"5em"}}
+            <p style={{ width: "40em" }}><br />{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
+
+
+            {/* {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  style={{width:"80em" ,height:"5em"}}
+              placeholder="Please enter reason - it should be a good reason" onChange={e => {
+                setReason(e.target.value)
+              }}>
+            </textarea>
+            )} */}
+
+
+        <div className="container">
+            <div className="row">
+                <div className="col-md-6">
+                        <div className="form-group files color">
+                            <label>Upload Your File </label>
+                            <input type="file" className="form-control" name="file" onChange={onFileChangeHandler}/>
+                        </div>
+                </div>
+            </div>
+        </div>
+ 
+
+
+
+
+            {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea style={{ width: "80em", height: "5em" }}
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
                 setReason(e.target.value)
               }}>
             </textarea>
             )}
 
-            {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea style={{width:"80em" ,height:"5em"}}
-              placeholder="Please enter reason - it should be a good reason" onChange={e => {
-                setReason(e.target.value)
-              }}>
-            </textarea>
-            )}
-            
-            
+
           </div>
         ))}
         <button onClick={submit} className="btn btn-success mx-3">
