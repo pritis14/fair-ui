@@ -255,7 +255,7 @@ const onFileChangeHandler =  async (e) => {
             />
             <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label>
 
-            <p style={{ width: "40em" }}><br />{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
+            <p style={{width: "80em"}}>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
 
 
             {/* {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  style={{width:"80em" ,height:"5em"}}
@@ -270,8 +270,8 @@ const onFileChangeHandler =  async (e) => {
             <div className="row">
                 <div className="col-md-6">
                         <div className="form-group files color">
-                            <label>Upload Your File </label>
-                            <input type="file" className="form-control" name="file" onChange={onFileChangeHandler}/>
+                            {/* <label>Upload Your File </label> */}
+                            <input  className="form-control" name="file" type={quesDetails.quesId>1?"file":"hidden"} onChange={onFileChangeHandler}/>
                         </div>
                 </div>
             </div>
