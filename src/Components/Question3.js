@@ -319,16 +319,6 @@ function Questions3(props) {
             <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label>
 
             <p style={{ width: "80em" }}>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
-
-
-            {/* {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  style={{width:"80em" ,height:"5em"}}
-              placeholder="Please enter reason - it should be a good reason" onChange={e => {
-                setReason(e.target.value)
-              }}>
-            </textarea>
-            )} */}
-
-
             <div className="container">
               <div className="row">
                 <div className="col-md-6">
@@ -339,6 +329,13 @@ function Questions3(props) {
                 </div>
               </div>
             </div>
+
+            {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  style={{width:"80em" ,height:"5em"}}
+              placeholder="Please enter reason - it should be a good reason" onChange={e => {
+                setReason(e.target.value)
+              }}>
+            </textarea>
+            )}
 
             {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea style={{ width: "80em", height: "5em" }}
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
