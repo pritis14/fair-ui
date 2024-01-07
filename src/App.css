@@ -14,17 +14,14 @@ body {
   overflow-x:scroll;
 }
 .aboutForm, .BasicForm, .Question3Form{
-  position: absolute;
-  top: 40%;
-  left: 50%;
   width: 50%;
   height: auto;
   border: 1px solid rgb(153, 151, 151);
   border-radius: 10px;
-  transform: translate(-50%, -50%);
   background-color: #fff;
   padding: 3em;
   text-align: center;
+  margin: 30px auto;
 }
 .aboutForm h3 {
   font-size: 1.8em;
@@ -39,6 +36,13 @@ button {
   border-radius: 5px;
   margin-top: 1em;
   letter-spacing: 1px;
+}
+.BasicForm {
+  text-align: left;
+}
+.BasicForm ul {
+  padding: 0;
+  margin-left: 15px;
 }
 .BasicForm, .Question3Form{
 width: 35%;

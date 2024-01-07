@@ -46,32 +46,92 @@ function Questions3(props) {
   const reportTemplateRef = useRef(null);
 
 
-  
-const onFileChangeHandler =  async (e) => {
-  e.preventDefault();
-  this.setState({
-      selectedFile: e.target.files[0]
-  });
-  const formData = new FormData();
-  formData.append('file', this.state.selectedFile);
-  
-	localStorage.setItem("data",JSON.stringify(formData));
+  const [files, setFiles] = useState([]);
+  const [counter, setCounter] = useState(0);
+  const fileInputRef = useRef(null);
+  const [resetInput, setResetInput] = useState(false);
 
-  // fetch('http://localhost:8080/upload', {
-  //     method: 'post',
-  //     body: formData
-  // }).then(res => {
-  //     if(res.ok) {
-  //         console.log(res.data);
-  //         alert("File uploaded successfully.")
-  //     }
-  // });
-};
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+
+    // Generate a unique key for each file
+    const key = `uploadedFile_${counter}`;
+    setCounter(counter + 1);
+
+    // Store file information in state
+    setFiles((prevFiles) => [...prevFiles, { key, file: selectedFile }]);
+
+    // Reset the file input
+    if (fileInputRef.current) {
+      console.log(fileInputRef.current);
+      fileInputRef.current.value = '';
+      console.log("lll");
+      console.log(fileInputRef.current);
+    }
+
+    // Reset the file input
+    setResetInput(true);
+    setTimeout(() => {
+      setResetInput(false);
+    }, 0);
+
+    // To store in sessionStorage
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fileContent = e.target.result;
+      sessionStorage.setItem(key, fileContent);
+    };
+    reader.readAsDataURL(selectedFile);
+  };
+
+  const onInputClick = (event) => {
+    event.target.value = ''
+  };
+
+  /*const [file, setFile] = useState(null);
+
+ 
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+ 
+    // To store in sessionStorage
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fileContent = e.target.result;
+      sessionStorage.setItem('uploadedFile', fileContent);
+    };
+    reader.readAsDataURL(selectedFile);
+  }; */
+
+
+
+
+  const onFileChangeHandler = async (e) => {
+    e.preventDefault();
+    this.setState({
+      selectedFile: e.target.files[0]
+    });
+    const formData = new FormData();
+    formData.append('file', this.state.selectedFile);
+
+    localStorage.setItem("data", JSON.stringify(formData));
+
+    // fetch('http://localhost:8080/upload', {
+    //     method: 'post',
+    //     body: formData
+    // }).then(res => {
+    //     if(res.ok) {
+    //         console.log(res.data);
+    //         alert("File uploaded successfully.")
+    //     }
+    // });
+  };
 
 
   const handleGeneratePdf = async (e) => {
     const doc = new jsPDF({
-      format: 'a4',
+      format: 'a2',
       unit: 'px',
     });
 
@@ -88,6 +148,11 @@ const onFileChangeHandler =  async (e) => {
       navigate('/thanks');
       await saveReport(answers);
     }
+
+    // Clear session storage
+    sessionStorage.clear();
+    // Clear the files state
+    setFiles([]);
 
   };
 
@@ -191,22 +256,20 @@ const onFileChangeHandler =  async (e) => {
   return isFinish ?
     (
 
-      <div className='BasicForm' style={styles.page}>
+      <div className='BasicForm'>
         <div ref={reportTemplateRef}>
-          <p>
+          <p style={{ width: 27 + "rem" }}>
             <h4>SURVEY REPORT</h4>
 
-            Name:     {props.data.name}
-
+            Name: {props.data.name}
             <br />
             EmailId: {props.data.email}
           </p>
 
-
           {
             answers.map((dt) => {
-              return (<div>
-                <ul>
+              return (
+                <ul  style={{ width: 27 + "rem" }}>
                   <li>
                     {dt.quesId} question: {dt.details}
                   </li>
@@ -217,11 +280,11 @@ const onFileChangeHandler =  async (e) => {
                     reason:{dt.reason}
                   </li>
                 </ul>
-              </div>)
+              )
             })
           }
           <br />
-          <p>{fairresult > 6 ? 'Survey is : Fair' : fairresult < 3 ? 'Survey is : Not Fair' : 'Survey is : Partial'}</p>
+          <p style={{ width: 27 + "rem" }}>{fairresult > 6 ? 'Survey is : Fair' : fairresult < 3 ? 'Survey is : Not Fair' : 'Survey is : Partial'}</p>
 
           {/* <button onClick={submit} className="btn btn-success mx-3">
           Survey Finished!!
@@ -251,11 +314,11 @@ const onFileChangeHandler =  async (e) => {
               id={id}
               autoComplete="off"
               value={id}
-              onChange={e => { setLabelstate(id === "N" ? true : false); setAnswer(id); setYeslabel(id === "Y" ? true : false) }}
+              onChange={e => { setLabelstate(id === "N"); setAnswer(id); setYeslabel(id === "Y") }}
             />
             <label htmlFor={id}>{id === "Y" ? "Yes" : "No"} </label>
 
-            <p style={{width: "80em"}}>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
+            <p style={{ width: "80em" }}>{id === "Y" ? quesDetails.quesYesLabel : quesDetails.quesNoLabel}</p>
 
 
             {/* {(( quesDetails.quesId>1 && id==="Y" && yeslabel) && <textarea  style={{width:"80em" ,height:"5em"}}
@@ -266,20 +329,16 @@ const onFileChangeHandler =  async (e) => {
             )} */}
 
 
-        <div className="container">
-            <div className="row">
+            <div className="container">
+              <div className="row">
                 <div className="col-md-6">
-                        <div className="form-group files color">
-                            {/* <label>Upload Your File </label> */}
-                            <input  className="form-control" name="file" type={quesDetails.quesId>1?"file":"hidden"} onChange={onFileChangeHandler}/>
-                        </div>
+                  <div className="form-group files color">
+                    {/* <label>Upload Your File </label> */}
+                    <input className="form-control" type={quesDetails.quesId > 1 ? "file" : "hidden"} onChange={handleFileChange} ref={fileInputRef} />
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
- 
-
-
-
 
             {((quesDetails.quesId > 1 && id === "N" && labelstate) && <textarea style={{ width: "80em", height: "5em" }}
               placeholder="Please enter reason - it should be a good reason" onChange={e => {
