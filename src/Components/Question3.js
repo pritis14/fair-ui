@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 
-function Questions3(props) {
+function Question3(props) {
   //const navigate = useNavigate(); 
   const [answer, setAnswer] = useState('Y');
 
   const [reason, setReason] = useState('');
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // For Pdf
   const styles = {
@@ -46,66 +48,49 @@ function Questions3(props) {
   const reportTemplateRef = useRef(null);
 
 
-  const [files, setFiles] = useState([]);
+  //const [files, setFiles] = useState([]);
   const [counter, setCounter] = useState(0);
   const fileInputRef = useRef(null);
   const [resetInput, setResetInput] = useState(false);
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
+  // Theeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+  const [files, setFiles] = useState(Array(10).fill(null));
 
-    // Generate a unique key for each file
-    const key = `uploadedFile_${counter}`;
-    setCounter(counter + 1);
+  const handleFileChange = (questionNumber, event) => {
+    const newFiles = [...files];
+    const file = event.target.files[0];
 
-    // Store file information in state
-    setFiles((prevFiles) => [...prevFiles, { key, file: selectedFile }]);
-
-    // Reset the file input
-    if (fileInputRef.current) {
-      console.log(fileInputRef.current);
-      fileInputRef.current.value = '';
-      console.log("lll");
-      console.log(fileInputRef.current);
+    if (file) {
+      // Store file reference or identifier in sessionStorage
+      sessionStorage.setItem(`question${questionNumber}`, file.name);
+      newFiles[questionNumber - 1] = file;
+    } else {
+      // If no file is present, set sessionStorage to empty
+      sessionStorage.setItem(`question${questionNumber}`, '');
+      newFiles[questionNumber - 1] = null;
     }
 
-    // Reset the file input
-    setResetInput(true);
-    setTimeout(() => {
-      setResetInput(false);
-    }, 0);
+    setFiles(newFiles);
 
-    // To store in sessionStorage
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const fileContent = e.target.result;
-      sessionStorage.setItem(key, fileContent);
-    };
-    reader.readAsDataURL(selectedFile);
+    if (fileInputRef.current) {
+      console.log("priti")
+      fileInputRef.current.value = null;
+    }
+    setSelectedFile(null);
+  };
+
+  const renderSelectedFile = (questionNumber) => {
+    const fileName = sessionStorage.getItem(`question${questionNumber}`);
+    if (fileName) {
+      return <div>File for Question {questionNumber}: {fileName}</div>;
+    } else {
+      return <div>No file selected for Question {questionNumber}</div>;
+    }
   };
 
   const onInputClick = (event) => {
     event.target.value = ''
   };
-
-  /*const [file, setFile] = useState(null);
-
- 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
- 
-    // To store in sessionStorage
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const fileContent = e.target.result;
-      sessionStorage.setItem('uploadedFile', fileContent);
-    };
-    reader.readAsDataURL(selectedFile);
-  }; */
-
-
-
 
   const onFileChangeHandler = async (e) => {
     e.preventDefault();
@@ -114,18 +99,13 @@ function Questions3(props) {
     });
     const formData = new FormData();
     formData.append('file', this.state.selectedFile);
+    var blob = new Blob([formData], { type: 'multipart/form-data' });
 
-    localStorage.setItem("data", JSON.stringify(formData));
-
-    // fetch('http://localhost:8080/upload', {
-    //     method: 'post',
-    //     body: formData
-    // }).then(res => {
-    //     if(res.ok) {
-    //         console.log(res.data);
-    //         alert("File uploaded successfully.")
-    //     }
-    // });
+    sessionStorage.setItem("data", JSON.stringify(blob));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setSelectedFile(null);
   };
 
 
@@ -173,15 +153,17 @@ function Questions3(props) {
       setFairesult(value => value + 1)
 
     fetchQuestions(answer)
-    // if (isFinish) {
-    //   navigate('/thanks');
-    //   await saveReport(answers)
-
-    // }
     setReason("")
+
     if (isFinish) {
 
     }
+
+    setSelectedFile(null);
+
+    if (formRef.current) {
+      formRef.current.reset();
+    } 
   }
 
   const [count, setCount] = useState(1);
@@ -239,8 +221,9 @@ function Questions3(props) {
         name: props.data.name,
         report: JSON.stringify(data),
         emailId: props.data.email,
-        surveyId: 1
-      }),
+        surveyId: 1,
+        data: JSON.parse(sessionStorage.getItem('data')) || []
+      }), 
       headers: {
         'Content-Type': 'application/json'
       }
@@ -250,13 +233,8 @@ function Questions3(props) {
 
 
   }
-
-
-
   return isFinish ?
-    (
-
-      <div className='BasicForm'>
+    (<div className='BasicForm'>
         <div ref={reportTemplateRef}>
           <p style={{ width: 27 + "rem" }}>
             <h4>SURVEY REPORT</h4>
@@ -279,6 +257,9 @@ function Questions3(props) {
                   <li>
                     reason:{dt.reason}
                   </li>
+                  <li>
+                    file:{renderSelectedFile(dt.quesId)}
+                  </li>
                 </ul>
               )
             })
@@ -298,7 +279,6 @@ function Questions3(props) {
         </div>
       </div>
     )
-
     : (<>
 
       <div className='Question3Form' >
@@ -323,8 +303,10 @@ function Questions3(props) {
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group files color">
-                    {/* <label>Upload Your File </label> */}
-                    <input className="form-control" type={quesDetails.quesId > 1 ? "file" : "hidden"} onChange={handleFileChange} ref={fileInputRef} />
+                    {/* <input className="form-control" type={quesDetails.quesId > 1 ? "file" : "hidden"} onChange={handleFileChange} ref={fileInputRef} /> */}
+                    <form ref={formRef}>
+                    <input type={quesDetails.quesId > 1 ? "file" : "hidden"} id={`fileInput${quesDetails.quesId}`}  ref={fileInputRef} onChange={(e) => handleFileChange(quesDetails.quesId, e)}/>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -353,11 +335,8 @@ function Questions3(props) {
       </div>
 
 
-    </>
-    )
+     </>
+     )
 }
 
-
-
-
-export default Questions3;
+export default Question3;

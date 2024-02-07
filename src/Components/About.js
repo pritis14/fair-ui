@@ -12,6 +12,7 @@ export const About = () => {
 
 	// Function to handle form submission 
 	const submit = (e) => {
+		sessionStorage.clear();
 		navigate('/addBasicData');
 	}
 	return (
