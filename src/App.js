@@ -12,6 +12,7 @@ import Questions from './Components/Questions';
 import Question1 from './Components/Question1';
 import Questions2 from './Components/Question2';
 import Questions3 from './Components/Question3';
+import Questions4 from './Components/Question4';
 import { About } from './Components/About'; 
 import TestPdf from './Components/TestPdf';
 
@@ -124,6 +125,7 @@ path='/question1'element={<Questions  addQuestion1Data={addQuestion1Data}/>} /> 
 <Route path='/question1'element={<Question1 data={basicData} />} /> 
 <Route path='/question2'element={<Questions2 />} /> 
 <Route path='/question3'element={<Questions3  data={basicData}/>} /> 
+<Route path='/question4'element={<Questions4  data={basicData}/>} /> 
 
 		{/* Render the About component */} 
 		<Route 

@@ -15,7 +15,8 @@ function Question4(props) {
   const [resetInput, setResetInput] = useState(false);
   const [files, setFiles] = useState(Array(10).fill(null));
   const fairresult2 = sessionStorage.getItem('fairresult2');
-  const fairresult1 = sessionStorage.getItem('fairresult1');  
+  const fairresult1 = sessionStorage.getItem('fairresult1'); 
+  const fairresult3 = sessionStorage.getItem('fairresult3');  
 
   const [answer1, setAnswer1] = useState([]);
 
@@ -338,7 +339,7 @@ function Question4(props) {
 
           <p><h4>SURVEY3</h4>
           {
-            answers3.map((dt) => {
+            answer3.map((dt) => {
               return (
                 <ul  style={{ width: 27 + "rem" }}>
                   <li>
@@ -482,4 +483,4 @@ function Question4(props) {
      )
 }
 
-export default Question3;
+export default Question4;
