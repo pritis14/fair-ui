@@ -22,7 +22,7 @@ const submit = (e) => {
 	// Call the addBasicData function provided by the parent component 
 	addBasicData(name, email); 
 	// Navigate to the '/questions' route 
-	navigate('/question3'); 
+	navigate('/question1'); 
 	} 
 } 
 

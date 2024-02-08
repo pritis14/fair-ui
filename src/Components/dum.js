@@ -3,48 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 
 function Question3(props) {
+  //const navigate = useNavigate(); 
   const [answer, setAnswer] = useState('Y');
+
   const [reason, setReason] = useState('');
   const navigate = useNavigate();
   const formRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  
   const [placeholder, setPlaceholder] = useState("Please enter reason - it should be a good reason");
-  const reportTemplateRef = useRef(null);
-  const [counter, setCounter] = useState(0);
-  const fileInputRef = useRef(null);
-  const [resetInput, setResetInput] = useState(false);
-  const [files, setFiles] = useState(Array(10).fill(null));
-  const fairresult2 = sessionStorage.getItem('fairresult2');
-  const fairresult1 = sessionStorage.getItem('fairresult1');  
+ // Assuming 'id' is a state variable that determines whether to show the textarea
+ // Assuming 'yeslabel' is a state variable that determines whether to show the textarea
 
-  const [answer1, setAnswer1] = useState([]);
-
-  useEffect(() => {
-    // Retrieve answers3 from session storage
-    const storedAnswers = sessionStorage.getItem('answers');
-    if (storedAnswers) {
-      // Parse the retrieved data
-      const parsedAnswers = JSON.parse(storedAnswers);
-      setAnswer1(parsedAnswers);
-    }
-  }, []);
-
-  const [answer2, setAnswer2] = useState([]);
-
-  useEffect(() => {
-    // Retrieve answers3 from session storage
-    const storedAnswers = sessionStorage.getItem('answers2');
-    if (storedAnswers) {
-      // Parse the retrieved data
-      const parsedAnswers = JSON.parse(storedAnswers);
-      setAnswer2(parsedAnswers);
-    }
-  }, []);
-
- 
   const handleReasonChange = (e) => {
     setReason(e.target.value);
   };
+
+
 
   // For Pdf
   const styles = {
@@ -80,17 +55,28 @@ function Question3(props) {
     },
   };
 
+  const reportTemplateRef = useRef(null);
+
+
+  //const [files, setFiles] = useState([]);
+  const [counter, setCounter] = useState(0);
+  const fileInputRef = useRef(null);
+  const [resetInput, setResetInput] = useState(false);
+
+  // Theeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+  const [files, setFiles] = useState(Array(10).fill(null));
+
   const handleFileChange = (questionNumber, event) => {
     const newFiles = [...files];
     const file = event.target.files[0];
 
     if (file) {
       // Store file reference or identifier in sessionStorage
-      sessionStorage.setItem(`3question${questionNumber}`, file.name);
+      sessionStorage.setItem(`1question${questionNumber}`, file.name);
       newFiles[questionNumber - 1] = file;
     } else {
       // If no file is present, set sessionStorage to empty
-      sessionStorage.setItem(`3question${questionNumber}`, '');
+      sessionStorage.setItem(`1question${questionNumber}`, '');
       newFiles[questionNumber - 1] = null;
     }
 
@@ -100,6 +86,8 @@ function Question3(props) {
       console.log("priti")
       fileInputRef.current.value = null;
     }
+   
+
   };
 
   const renderSelectedFile = (questionNumber) => {
@@ -111,23 +99,25 @@ function Question3(props) {
     }
   };
 
-  const renderSelectedFile2 = (questionNumber) => {
-    const fileName = sessionStorage.getItem(`2question${questionNumber}`);
-    if (fileName) {
-      return <div>File for Question {questionNumber}: {fileName}</div>;
-    } else {
-      return <div>No file selected for Question {questionNumber}</div>;
+  const onInputClick = (event) => {
+    event.target.value = ''
+  };
+
+  const onFileChangeHandler = async (e) => {
+    e.preventDefault();
+    this.setState({
+      selectedFile: e.target.files[0]
+    });
+    const formData = new FormData();
+    formData.append('file', this.state.selectedFile);
+    var blob = new Blob([formData], { type: 'multipart/form-data' });
+
+    sessionStorage.setItem("data", JSON.stringify(blob));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
-  const renderSelectedFile3 = (questionNumber) => {
-    const fileName = sessionStorage.getItem(`3question${questionNumber}`);
-    if (fileName) {
-      return <div>File for Question {questionNumber}: {fileName}</div>;
-    } else {
-      return <div>No file selected for Question {questionNumber}</div>;
-    }
-  };
 
   const handleGeneratePdf = async (e) => {
     const doc = new jsPDF({
@@ -145,7 +135,6 @@ function Question3(props) {
     });
 
     if (isFinish) {
-     
       navigate('/thanks');
       await saveReport(answers);
     }
@@ -177,7 +166,6 @@ function Question3(props) {
     setReason("")
 
     if (isFinish) {
-      sessionStorage.setItem('answers3', JSON.stringify(answers));
 
     }
 
@@ -209,7 +197,7 @@ function Question3(props) {
   }, []);
 
   const fetchQuestions = (quesType = "") => {
-    fetch(`http://localhost:8080/bySurvey2AndQuestionType/3/${quesNo}${quesType}`)
+    fetch(`http://localhost:8080/bySurveyAndQuestionType/1/${quesNo}${quesType}`)
       .then(response => {
         if (response.status === 200) {
           return response.json()
@@ -266,9 +254,9 @@ function Question3(props) {
             <br />
             EmailId: {props.data.email}
           </p>
-          <p><h4>SURVEY1   </h4>
+
           {
-            answer1.map((dt) => {
+            answers.map((dt) => {
               return (
                 <ul  style={{ width: 27 + "rem" }}>
                   <li>
@@ -287,60 +275,12 @@ function Question3(props) {
               )
             })
           }
-          </p>
-          <br />
-          <p style={{ width: 27 + "rem" }}>{fairresult1 > 6 ? 'Survey is : Fair' : fairresult1 < 3 ? 'Survey is : Not Fair' : 'Survey is : Partial'}</p>
-
-          <p><h4>SURVEY2</h4>
-          {
-            answer2.map((dt) => {
-              return (
-                <ul  style={{ width: 27 + "rem" }}>
-                  <li>
-                    {dt.quesId} question: {dt.details}
-                  </li>
-                  <li>
-                    answer: {dt.answer}
-                  </li>
-                  <li>
-                    reason:{dt.reason}
-                  </li>
-                  <li>
-                    file:{renderSelectedFile2(dt.quesId)}
-                  </li>
-                </ul>
-              )
-            })
-          }
-          </p>
-          <br />
-          <p style={{ width: 27 + "rem" }}>{fairresult2 > 6 ? 'Survey is : Fair' : fairresult2 < 3 ? 'Survey is : Not Fair' : 'Survey is : Partial'}</p>
-
-          <p><h4>SURVEY3</h4>
-          {
-            answers.map((dt) => {
-              return (
-                <ul  style={{ width: 27 + "rem" }}>
-                  <li>
-                    {dt.quesId} question: {dt.details}
-                  </li>
-                  <li>
-                    answer: {dt.answer}
-                  </li>
-                  <li>
-                    reason:{dt.reason}
-                  </li>
-                  <li>
-                    file:{renderSelectedFile3(dt.quesId)}
-                  </li>
-                </ul>
-              )
-            })
-          }
-          </p>
-
           <br />
           <p style={{ width: 27 + "rem" }}>{fairresult > 6 ? 'Survey is : Fair' : fairresult < 3 ? 'Survey is : Not Fair' : 'Survey is : Partial'}</p>
+
+          {/* <button onClick={submit} className="btn btn-success mx-3">
+          Survey Finished!!
+        </button> */}
 
         </div>
         <div >

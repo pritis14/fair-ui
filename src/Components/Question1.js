@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Question2() {
+function Question1(props) {
   const [answer, setAnswer] = useState('Y');
   const [reason, setReason] = useState('');
   const navigate = useNavigate();
@@ -21,13 +21,6 @@ function Question2() {
   const [labelstate, setLabelstate] = useState(false);
   const [yeslabel, setYeslabel] = useState(false);
 
-  useEffect(() => {
-    const storedAnswers = sessionStorage.getItem('answers');
-    if (storedAnswers) {
-      setAnswers(JSON.parse(storedAnswers));
-    }
-  }, []);
-
   const handleReasonChange = (e) => {
     setReason(e.target.value);
   };
@@ -42,11 +35,11 @@ function Question2() {
 
     if (file) {
       // Store file reference or identifier in sessionStorage
-      sessionStorage.setItem(`2question${questionNumber}`, file.name);
+      sessionStorage.setItem(`1question${questionNumber}`, file.name);
       newFiles[questionNumber - 1] = file;
     } else {
       // If no file is present, set sessionStorage to empty
-      sessionStorage.setItem(`2question${questionNumber}`, '');
+      sessionStorage.setItem(`1question${questionNumber}`, '');
       newFiles[questionNumber - 1] = null;
     }
 
@@ -66,7 +59,6 @@ function Question2() {
     setYeslabel(true)
     setCount(pre => pre + 1)
 
-
     setAnswers(pre => {
       return [...pre, ...[{ quesId: quesDetails.quesId, answer: answer, reason, details: quesDetails.quesDescription }]
       ]
@@ -79,9 +71,9 @@ function Question2() {
     setReason("")
 
     if (isFinish) {
-        sessionStorage.setItem('answers2', JSON.stringify(answers));
-        sessionStorage.setItem('fairresult2', JSON.stringify(fairresult));
-        navigate('/question3');
+        sessionStorage.setItem('answers', JSON.stringify(answers));
+        sessionStorage.setItem('fairresult1', JSON.stringify(fairresult));
+        navigate('/question2');
     }
 
     const fileInput = document.getElementById(`fileInput${quesDetails.quesId}`);
@@ -99,7 +91,7 @@ function Question2() {
   }, []);
 
   const fetchQuestions = (quesType = "") => {
-    fetch(`http://localhost:8080/bySurvey1AndQuestionType/2/${quesNo}${quesType}`)
+    fetch(`http://localhost:8080/bySurveyAndQuestionType/1/${quesNo}${quesType}`)
       .then(response => {
         if (response.status === 200) {
           return response.json()
@@ -147,6 +139,7 @@ function Question2() {
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group files color">
+                    {/* <input className="form-control" type={quesDetails.quesId > 1 ? "file" : "hidden"} onChange={handleFileChange} ref={fileInputRef} /> */}
                     <form ref={formRef}>
                     <input type={quesDetails.quesId > 1 ? "file" : "hidden"} id={`fileInput${quesDetails.quesId}`}   onChange={(e) => handleFileChange(quesDetails.quesId, e)}/>
                     </form>
@@ -190,4 +183,4 @@ function Question2() {
      )
 }
 
-export default Question2;
+export default Question1;
